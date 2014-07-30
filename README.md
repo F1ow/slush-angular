@@ -98,15 +98,15 @@ To run tests run:
 gulp test
 ```
 
-#### Production ready build - a.k.a. dist
+#### Production ready build - a.k.a. public
 
 To make the app ready for deploy to production run:
 
 ```bash
-gulp dist
+gulp public
 ```
 
-Now you have a `./dist` folder with all your scripts and stylesheets concatenated and minified, also third party libraries installed with bower will be concatenated and minified into `vendors.min.js` and `vendors.min.css` respectively.
+Now you have a `./public` folder with all your scripts and stylesheets concatenated and minified, also third party libraries installed with bower will be concatenated and minified into `vendors.min.js` and `vendors.min.css` respectively.
 
 ## Changelog
 

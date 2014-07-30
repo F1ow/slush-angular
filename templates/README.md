@@ -33,12 +33,12 @@ Then you're able to run Karma directly. Example:
 karma start --single-run
 ```
 
-## Production ready build - a.k.a. dist
+## Production ready build - a.k.a. public
 
 To make the app ready for deploy to production run:
 
 ```bash
-gulp dist
+gulp public
 ```
 
-Now there's a `./dist` folder with all scripts and stylesheets concatenated and minified, also third party libraries installed with bower will be concatenated and minified into `vendors.min.js` and `vendors.min.css` respectively.
+Now there's a `./public` folder with all scripts and stylesheets concatenated and minified, also third party libraries installed with bower will be concatenated and minified into `vendors.min.js` and `vendors.min.css` respectively.

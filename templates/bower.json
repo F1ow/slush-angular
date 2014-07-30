@@ -1,13 +1,13 @@
 {
   "name": "<%= nameDashed %>",
   "main": [
-    "/dist/<%= nameDashed %>.min.js",
-    "/dist/<%= nameDashed %>.min.css"
+    "/public/<%= nameDashed %>.min.js",
+    "/public/<%= nameDashed %>.min.css"
   ],
   "version": "0.1.0",
-  "description": "TODO",
+  "description": "<%= description %>",
   "authors": [
-    "TODO"
+    "Florian Nebenfuehr"
   ],
   "ignore": [
     "**/.*",
@@ -19,10 +19,10 @@
     "src"
   ],
   "dependencies": {
-    "angular": "~1.2.14",
-    "angular-route": "~1.2.14"
+    "angular": "*",
+    "angular-ui-router": "*"
   },
   "devDependencies": {
-    "angular-mocks": "~1.2.14"
+    "angular-mocks": "*"
   }
 }

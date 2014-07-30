@@ -18,6 +18,8 @@
     "stylus",
     "less",
     "sass",
+    "jade",
+    "coffeescript",
     "karma"
   ],
   "author": "Joakim Bengtson <joakim@klei.se>",

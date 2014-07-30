@@ -1,0 +1,15 @@
+div(ng-controller="Todo as todos")
+  h3 Todo
+
+  input(type="search", placeholder="Filter todos", ng-model="todos.search")
+  span.remaining {{todos.remaining()}} of {{todos.list.length}} remaining
+  button.archive(ng-click="todos.archive()") Archive
+
+  ul
+    li(ng-repeat="todo in todos.list | filter:todos.search", ng-click="todos.toggle(todo)")
+      input(type="checkbox", ng-model="todo.done")
+      span(class="done-{{todo.done}}") {{todo.text}}
+
+  form(ng-submit="todos.addTodo()")
+    input(type="text", ng-model="todos.input", placeholder="add a new todo")
+    button(type="submit") Add

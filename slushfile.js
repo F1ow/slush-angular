@@ -6,64 +6,43 @@ var gulp = require('gulp'),
     inquirer = require('inquirer'),
     _ = require('underscore.string');
 
-var cssTypeData = {
-  'less': {
-    plugin: 'gulp-less',
-    pluginVersion: '^1.2.3',
-    pipeCommand: 'g.less()',
-    extension: 'less'
-  },
-  'sass': {
-    plugin: 'gulp-sass',
-    pluginVersion: '^0.7.1',
-    pipeCommand: 'g.sass()',
-    extension: 'scss'
-  },
-  'styl': {
-    plugin: 'gulp-stylus',
-    pluginVersion: '^1.0.2',
-    pipeCommand: 'g.stylus({use: [require(\'nib\')()]})',
-    extension: 'styl',
-    extraDependencies: {
-      'nib': '^1.0.2'
-    }
-  }
-};
-
 gulp.task('default', function (done) {
   inquirer.prompt([
     {type: 'input', name: 'name', message: 'What do you want to name your AngularJS app?', default: getNameProposal()},
-    {type: 'list', name: 'csstype', message: 'What CSS preprocessor do you want to use?', default: 'styl', choices: [
-      {name: 'Stylus', value: 'styl'},
-      {name: 'LESS', value: 'less'},
-      {name: 'Sass', value: 'sass'}
-    ]},
-    {type: 'confirm', name: 'coffee', message: 'Do you want to use CoffeeScript in your app?', default: false},
+    {type: 'input', name: 'description', message: 'Descripe your app in one line?', default: "Todo"},
+    {type: 'confirm', name: 'stylus', message: 'Do you want to use Stylus in your app?', default: true},
+    {type: 'confirm', name: 'coffee', message: 'Do you want to use CoffeeScript in your app?', default: true},
+    {type: 'confirm', name: 'jade', message: 'Do you want to use Jade in your app?', default: true},
     {type: 'confirm', name: 'example', message: 'Do you want to include a Todo List example in your app?', default: true}
   ],
   function (answers) {
     answers.nameDashed = _.slugify(answers.name);
+    answers.description = answers.description;
     answers.modulename = _.camelize(answers.nameDashed);
     var files = [__dirname + '/templates/**'];
-    if (answers.coffee) {
-      files.push('!' + __dirname + '/templates/src/**/*.js')
+    if (answers.stylus) {
+      files.push('!' + __dirname + '/templates/client/**/*.css')
     }
     else {
-      files.push('!' + __dirname + '/templates/src/**/*.coffee')
+      files.push('!' + __dirname + '/templates/client/**/*.styl')
+    }
+    if (answers.coffee) {
+      files.push('!' + __dirname + '/templates/client/**/*.js')
+    }
+    else {
+      files.push('!' + __dirname + '/templates/client/**/*.coffee')
+    }
+    if (answers.jade) {
+      files.push('!' + __dirname + '/templates/client/**/*.html')
+    }
+    else {
+      files.push('!' + __dirname + '/templates/client/**/*.jade')
     }
     if (!answers.example) {
-      files.push('!' + __dirname + '/templates/src/app/todo/**');
+      files.push('!' + __dirname + '/templates/client/app/todo/**');
     }
-    answers.styleData = cssTypeData[answers.csstype];
     return gulp.src(files)
       .pipe(template(answers))
-      .pipe(rename(function (file) {
-        if (file.extname === '.css') {
-          file.extname = '.' + answers.styleData.extension;
-        } else if (file.basename[0] === '_') {
-          file.basename = '.' + file.basename.slice(1);
-        }
-      }))
       .pipe(conflict('./'))
       .pipe(gulp.dest('./'))
       .pipe(install())

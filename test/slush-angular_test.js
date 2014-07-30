@@ -55,7 +55,7 @@ describe('slush-angular', function() {
 
     it('should add a gulpfile to project root', function (done) {
       gulp.start('default').once('stop', function () {
-        mockGulpDest.assertDestContains('gulpfile.js');
+        mockGulpDest.assertDestContains('gulpfile.coffee');
         done();
       });
     });
@@ -74,9 +74,12 @@ describe('slush-angular', function() {
       });
     });
 
-    it('should add an index.html to the app folder', function (done) {
+    it('should add an index.jade to the app folder', function (done) {
+      mockPrompt({name: '', example: false, jade: true});
+
       gulp.start('default').once('stop', function () {
-        mockGulpDest.assertDestContains('src/app/index.html');
+        mockGulpDest.assertDestNotContains('client/app/index.html');
+        mockGulpDest.assertDestContains('client/app/index.jade');
         done();
       });
     });
@@ -86,7 +89,7 @@ describe('slush-angular', function() {
 
       gulp.start('default').once('stop', function () {
         mockGulpDest.assertDestContains('src/app/app.js');
-        mockGulpDest.assertDestNotContains('src/app/app.coffee');
+        mockGulpDest.assertDestNotContains('client/app/app.coffee');
         done();
       });
     });
@@ -95,15 +98,15 @@ describe('slush-angular', function() {
       mockPrompt({name: 'module', example: false, coffee: true});
 
       gulp.start('default').once('stop', function () {
-        mockGulpDest.assertDestNotContains('src/app/app.js');
-        mockGulpDest.assertDestContains('src/app/app.coffee');
+        mockGulpDest.assertDestNotContains('client/app/index.js');
+        mockGulpDest.assertDestContains('client/app/index.coffee');
         done();
       });
     });
 
-    it('should create a gitkeep file in the app assets dir', function (done) {
+    it('should create a gitkeep file in assets dir', function (done) {
       gulp.start('default').once('stop', function () {
-        mockGulpDest.assertDestContains('src/app/assets/.gitkeep');
+        mockGulpDest.assertDestContains('client/assets/.gitkeep');
         done();
       });
     });
@@ -114,17 +117,11 @@ describe('slush-angular', function() {
 
         gulp.start('default').once('stop', function () {
           mockGulpDest.assertDestNotContains({
-            'src/app/todo': [
-              'todo.html',
-              'todo.js',
-              'todo-controller.js',
-              'todo-controller_test.js',
+            'client/app/todo': [
+              'todo.jade',
               'todo.coffee',
-              'todo-controller.coffee',
-              'todo-controller_test.coffee',
+              'todo_test.coffee',
               'todo.styl',
-              'todo.less',
-              'todo.scss'
             ]
           });
           done();
@@ -133,19 +130,19 @@ describe('slush-angular', function() {
 
       describe('When Todo example is included', function () {
         beforeEach(function () {
-          mockPrompt({name: 'module', example: true});
+          mockPrompt({name: 'module', example: true, jade: true, coffee: true});
         });
 
         it('should add a module specific template', function (done) {
           gulp.start('default').once('stop', function () {
-            mockGulpDest.assertDestContains('src/app/todo/todo.html');
+            mockGulpDest.assertDestContains('client/app/todo/todo.jade');
             done();
           });
         });
 
         it('should add a module definition file for the Todo module', function (done) {
           gulp.start('default').once('stop', function () {
-            mockGulpDest.assertDestContains('src/app/todo/todo.js');
+            mockGulpDest.assertDestContains('client/app/todo/todo.coffee');
             done();
           });
         });
@@ -153,31 +150,21 @@ describe('slush-angular', function() {
         it('should add a Todo controller with a corresponding test file', function (done) {
           gulp.start('default').once('stop', function () {
             mockGulpDest.assertDestContains([
-              'src/app/todo/todo-controller.js',
-              'src/app/todo/todo-controller_test.js'
+              'client/app/todo/todo.coffee',
+              'client/app/todo/todo_test.coffee'
             ]);
             done();
           });
         });
 
-        describe('When CoffeeScript is chosen', function () {
+        describe('When Jade is chosen', function () {
           beforeEach(function () {
-            mockPrompt({name: 'module', example: true, coffee: true});
+            mockPrompt({name: 'module', example: true, jade: true});
           });
 
-          it('should add a CoffeeScript module definition file', function (done) {
+          it('should add a Jade module definition file', function (done) {
             gulp.start('default').once('stop', function () {
-              mockGulpDest.assertDestContains('src/app/todo/todo.coffee');
-              done();
-            });
-          });
-
-          it('should add a CoffeeScript Todo controller with a corresponding test file', function (done) {
-            gulp.start('default').once('stop', function () {
-              mockGulpDest.assertDestContains([
-                'src/app/todo/todo-controller.coffee',
-                'src/app/todo/todo-controller_test.coffee'
-              ]);
+              mockGulpDest.assertDestContains('client/app/todo/todo.jade');
               done();
             });
           });
@@ -192,35 +179,8 @@ describe('slush-angular', function() {
 
         gulp.start('default').once('stop', function () {
           mockGulpDest.assertDestContains([
-            'src/app/app.styl',
-            'src/app/styles/_base.styl',
-            'src/app/todo/todo.styl'
-          ]);
-          done();
-        });
-      });
-
-      it('should add LESS stylesheets when LESS is chosen', function (done) {
-        mockPrompt({name: 'module', csstype: 'less', example: true});
-
-        gulp.start('default').once('stop', function () {
-          mockGulpDest.assertDestContains([
-            'src/app/app.less',
-            'src/app/styles/_base.less',
-            'src/app/todo/todo.less'
-          ]);
-          done();
-        });
-      });
-
-      it('should add Sass stylesheets when Sass is chosen', function (done) {
-        mockPrompt({name: 'module', csstype: 'sass', example: true});
-
-        gulp.start('default').once('stop', function () {
-          mockGulpDest.assertDestContains([
-            'src/app/app.scss',
-            'src/app/styles/_base.scss',
-            'src/app/todo/todo.scss'
+            'client/styles/index.styl',
+            'client/app/todo/todo.styl'
           ]);
           done();
         });
