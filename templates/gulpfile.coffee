@@ -38,7 +38,7 @@ ngClassifyOpts =
     format: 'camelCase'
     suffix: ''
   service:
-    format: 'camelCase'
+    format: 'upperCamelCase'
     suffix: ''
   value:
     format: 'camelCase'
@@ -75,17 +75,43 @@ gulp.task 'jade', ->
 
 ## Combine
 gulp.task 'dependencies', ->
+  jsFilter = g.filter('*.js')
+  cssFilter = g.filter('*.css')
+  fontFilter = g.filter(['*.eot', '*.woff', '*.svg', '*.ttf'])
+
   gulp.src(mainBowerFiles())
-    # .pipe g.util.log('mainBowerFiles', mainBowerFiles())
+    # .pipe g.filelog()
     .pipe g.plumber(errorHandler: reportError)
-    # .pipe g.concat('lib.js')
-    # cached
+
+    # grab vendor js files from bower_components
+    # .pipe jsFilter
+    # .pipe g.concat('vendor.js')
     .pipe gulp.dest("./.tmp/lib")
+    # .pipe jsFilter.restore()
+
+    # grab vendor css files from bower_components
+    # .pipe cssFilter
+    # .pipe g.concat('vendor.css')
+    # .pipe gulp.dest("./.tmp/lib")
+    # .pipe cssFilter.restore()
+
+    # grab vendor font files from bower_components
+    # .pipe fontFilter
+    # .pipe flatten()
+    # .pipe(gulp.dest(dest_path + '/fonts'))
+
 
 gulp.task 'scripts', ->
   # concat libs
-  gulp.src(["./.tmp/#{src}/**/*.js", "./.tmp/lib/*.js"])
-    .pipe g.angularFilesort()
+  # gulp.src(["./.tmp/lib/*.js", "./.tmp/#{src}/**/*.js"])
+  #   .pipe g.filelog()
+  gulp.src([
+      "./.tmp/lib/angular.js",
+      "./.tmp/lib/jquery.js",
+      "./.tmp/lib/*.js",
+      "./.tmp/#{src}/app/index.js",
+      "./.tmp/#{src}/**/*.js"
+    ])
     .pipe g.sourcemaps.init()
     .pipe g.concat('application.js')
     .pipe g.sourcemaps.write('./maps')
@@ -105,7 +131,7 @@ gulp.task 'templates', ->
     # uglify
     # ngmin / ngannotate
     # lazypipe()
-    .pipe g.angularTemplatecache(standalone: true, root: "#{src}/", module: "templates")
+    .pipe g.angularTemplatecache(standalone: true, root: "#{src}/", module: "Templates")
     .pipe gulp.dest("./.tmp/#{src}")
 
 ## End Combine
@@ -129,6 +155,9 @@ gulp.task 'server', ->
     debugInfo: false
     notify: false
 
+gulp.task 'clean', ->
+  gulp.src(["./.tmp/**/*.*", "#{dest}/**/*.*"], read: false)
+    .pipe g.rimraf()
 # End Sub Tasks
 
 
@@ -163,6 +192,9 @@ gulp.task 'watch', ['compile', 'server'], ->
 
   # g.watch glob: "#{dest}", emitOnGlob: false, ->
   #   browserSync.reload(stream: true)
+
+# gulp.task 'serve', ['clean'], ->
+#   gulp.start('watch')
 
 gulp.task 'serve', ['watch']
 
