@@ -18,10 +18,10 @@
     "bower_components",
     "src"
   ],
-  "dependencies": {
-    "angular": "*",
-    "angular-ui-router": "*"
-  },
+ "dependencies": {
+   "angular": "~1.2.21",
+   "angular-route": "~1.2.21"
+ },
   "devDependencies": {
     "angular-mocks": "*"
   }

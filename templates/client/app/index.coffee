@@ -1,12 +1,19 @@
-app = angular.module 'app', ['ui.router', 'templates']
+class app extends App
+  constructor: ->
+    return[
+      'Templates'
+      'ngRoute'
+    ]
+
 
 class Setup extends Config
-  constructor: ($locationProvider, $urlRouterProvider, $stateProvider) ->
+  constructor: ($routeProvider, $locationProvider) ->
     $locationProvider.html5Mode true
-    $urlRouterProvider.otherwise '/'
 
-    $stateProvider
-      .state 'todo',
-        url: '/'
+    $routeProvider
+      .when '/',
         templateUrl: 'client/app/todo/todo.html'
-        controller: 'todo'
+        controller: 'Todo'
+
+      .otherwise
+        redirectTo: '/'
