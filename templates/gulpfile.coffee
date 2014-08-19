@@ -113,7 +113,7 @@ gulp.task 'scripts', ->
       "./.tmp/#{src}/**/*.js"
     ])
     .pipe g.sourcemaps.init()
-    .pipe g.concat('application.js')
+    .pipe g.concat('app.js')
     .pipe g.sourcemaps.write('./maps')
     .pipe gulp.dest("#{dest}")
     .pipe browserSync.reload(stream: true)
@@ -121,7 +121,7 @@ gulp.task 'scripts', ->
 gulp.task 'styles', ->
   # concat libs
   gulp.src(["./.tmp/#{src}/**/*.css", "./.tmp/lib/*.css"])
-    .pipe g.concat('application.css')
+    .pipe g.concat('app.css')
     .pipe gulp.dest("#{dest}")
     .pipe browserSync.reload(stream: true)
 
